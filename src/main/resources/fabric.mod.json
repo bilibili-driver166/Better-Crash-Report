@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "better-crash-reports",
+	"version": "${version}",
+	"name": "Better Crash Reports",
+	"description": "This is a mod which aims to improve the Minecraft Crash Report so that it will be clearer to know what the error is and why it happens.",
+	"authors": [
+		"driver166"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "GPL-v3",
+	"icon": "assets/better-crash-reports/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.mod.driver166.BetterCrashReports"
+		],
+		"fabric-datagen": [
+			"com.mod.driver166.BetterCrashReportsDataGenerator"
+		]
+	},
+	"mixins": [
+		"better-crash-reports.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}
