@@ -17,9 +17,6 @@
 	"entrypoints": {
 		"main": [
 			"com.mod.driver166.BetterCrashReports"
-		],
-		"fabric-datagen": [
-			"com.mod.driver166.BetterCrashReportsDataGenerator"
 		]
 	},
 	"mixins": [
@@ -27,8 +24,8 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
-		"minecraft": "~1.20.1",
+		"minecraft": "~1.16",
 		"java": ">=17",
-		"fabric-api": "*"
+		"fabric": "*"
 	}
 }
