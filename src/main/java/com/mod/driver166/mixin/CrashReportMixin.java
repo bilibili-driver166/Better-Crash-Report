@@ -1,18 +1,16 @@
 package com.mod.driver166.mixin;
 
 import com.google.common.collect.Lists;
-import com.mod.driver166.BetterCrashReports;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.SystemDetails;
 import net.minecraft.util.Util;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,7 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
@@ -80,7 +81,7 @@ public abstract class CrashReportMixin {
         };
 
         try {
-            return Text.translatable(translationKeys[(int)(Util.getMeasuringTimeNano() % (long)translationKeys.length)]).getString();
+            return new TranslatableText(translationKeys[(int)(Util.getMeasuringTimeNano() % (long)translationKeys.length)]).getString();
         } catch (Throwable var2) {
             return "Witty comment unavailable :(";
         }
@@ -122,36 +123,36 @@ public abstract class CrashReportMixin {
     }
     @Unique
     private void generate_advertise(StringBuilder stringBuilder){
-        stringBuilder.append("\n").append(Text.translatable("crash.better-crash-reports.adv").getString()).append("\n");
+        stringBuilder.append("\n").append(new TranslatableText("crash.better-crash-reports.adv").getString()).append("\n");
         String[] lines = getCauseAsString().split("\n");
         try {
             if (lines[0].contains("provided by")) {
                 if (mods_contains_modid(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])) {
                     String mod_id = lines[0].split("provided by")[1].split(" at")[0].split("'")[1];
                     ModMetadata metadata = getModMetadata(mod_id);
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.adv_a", getModName(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])).getString());
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_a", getModName(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])).getString());
                     stringBuilder.append("\n");
-                    stringBuilder.append("--- ").append(Text.translatable("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                    stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
+                    stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
                 }
-            } else if (lines[0].contains("Manually triggered debug crash")) {
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.adv_b").getString());
+            } else if (lines[0].contains("Manually triggered debug crash") || lines[1].contains("pollDebugCrash")) {
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_b").getString());
             } else if (mods_contains_modid(lines[1].split("\\$")[lines[1].split("\\$").length - 2])) {
                 String mod_id = lines[1].split("\\$")[lines[1].split("\\$").length - 2];
                 ModMetadata metadata = getModMetadata(mod_id);
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.adv_a", getModName(lines[1].split("\\$")[lines[1].split("\\$").length - 2])).getString());
-                stringBuilder.append("\n");stringBuilder.append("--- ").append(Text.translatable("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_a", getModName(lines[1].split("\\$")[lines[1].split("\\$").length - 2])).getString());
+                stringBuilder.append("\n");stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
             } else {
-                stringBuilder.append(Text.translatable("crash.better-crash-reports.unknown").getString());
+                stringBuilder.append(new TranslatableText("crash.better-crash-reports.unknown").getString());
             }
         } catch (IndexOutOfBoundsException ignored){
         }
@@ -160,27 +161,27 @@ public abstract class CrashReportMixin {
     @Inject(at = @At(value = "HEAD"), method = "asString", cancellable = true)
     public void asString(CallbackInfoReturnable<String> cir){
         StringBuilder sb = new StringBuilder();
-        sb.append("---- ").append(Text.translatable("crash.better-crash-reports.title").getString()).append(" ---\n");
+        sb.append("---- ").append(new TranslatableText("crash.better-crash-reports.title").getString()).append(" ---\n");
         sb.append("// ");
         sb.append(generateWittyComment());
         sb.append("\n\n");
-        sb.append(Text.translatable("crash.better-crash-reports.time").getString());
+        sb.append(new TranslatableText("crash.better-crash-reports.time").getString());
         sb.append(DATE_TIME_FORMATTER.format(ZonedDateTime.now()));
         sb.append("\n");
-        sb.append(Text.translatable("crash.better-crash-reports.description").getString());
+        sb.append(new TranslatableText("crash.better-crash-reports.description").getString());
         sb.append(getMessage());
         sb.append("\n\n");
-        sb.append(Text.translatable("crash.better-crash-reports.thread").getString()).append(Thread.currentThread().getName()).append("\n");
-        sb.append(Text.translatable("crash.better-crash-reports.stacktrace").getString());
+        sb.append(new TranslatableText("crash.better-crash-reports.thread").getString()).append(Thread.currentThread().getName()).append("\n");
+        sb.append(new TranslatableText("crash.better-crash-reports.stacktrace").getString());
         sb.append("\n");
         sb.append(getCauseAsString());
-        sb.append("\n\n").append(Text.translatable("crash.better-crash-reports.mod_used").getString()).append("\n");
+        sb.append("\n\n").append(new TranslatableText("crash.better-crash-reports.mod_used").getString()).append("\n");
         for (ModContainer mod:FabricLoader.getInstance().getAllMods()){
             sb.append("\t- ").append(mod.toString()).append("\n");
         }
         generate_advertise(sb);
         sb.append("\n\n");
-        sb.append(Text.translatable("crash.better-crash-reports.other_infos").getString());
+        sb.append(new TranslatableText("crash.better-crash-reports.other_infos").getString());
         sb.append("\n");
         sb.append("-".repeat(87));
         sb.append("\n\n");
