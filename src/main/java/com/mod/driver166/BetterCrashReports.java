@@ -1,7 +1,6 @@
 package com.mod.driver166;
 
 import net.fabricmc.api.ModInitializer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

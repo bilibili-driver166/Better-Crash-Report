@@ -24,8 +24,13 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.18.4",
+<<<<<<< Updated upstream
 		"minecraft": "~1.15",
 		"java": ">=17",
+=======
+		"minecraft": "~1.15",
+		"java": ">=8",
+>>>>>>> Stashed changes
 		"fabric": "*"
 	}
 }
