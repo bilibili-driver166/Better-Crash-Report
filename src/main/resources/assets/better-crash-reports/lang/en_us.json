@@ -7,7 +7,10 @@
   "crash.better-crash-reports.other_infos": "Other infos may used to debug further",
   "crash.better-crash-reports.at": "at ",
   "crash.better-crash-reports.thread": "Thread: ",
-  "crash.better-crash-reports.adv_a": "Better crash reports thinks there is a problem with mod %s, you can try to uninstall that mod and try again.",
+  "crash.better-crash-reports.adv_a.1": "Better Crash Reports thinks there is a problem with mod %s, you can try to uninstall that mod and try again.",
+  "crash.better-crash-reports.adv_a.2": "Is there a problem with mod %s? You can try to update it or uninstall it and try again",
+  "crash.better-crash-reports.adv_a.3": "There might be a problem with mod %s, at least I think so.",
+  "crash.better-crash-reports.adv_a.4": "Mod %s might is the cause of this crash. You may need to update it or uninstall it.",
   "crash.better-crash-reports.adv_b": "You crashed your game. Why did you do that?",
   "crash.better-crash-reports.adv": "Advise from mod Better Crash Reports:",
   "crash.better-crash-reports.unknown": "Better Crash Reports doesn't know what is the problem. Maybe there is a bug with Minecraft itself.",
@@ -50,5 +53,7 @@
   "crash.better-crash-report.comment.30": "You're mean.",
   "crash.better-crash-report.comment.31": "This is a token for 1 free hug. Redeem at your nearest Mojangsta: [~~HUG~~]",
   "crash.better-crash-report.comment.32": "There are four lights!",
-  "crash.better-crash-report.comment.33": "But it works on my machine."
+  "crash.better-crash-report.comment.33": "But it works on my machine.",
+  "java.lang.NullPointerException": "Null Pointer Exception",
+  "java.lang.RuntimeException": "Runtime Exception"
 }
