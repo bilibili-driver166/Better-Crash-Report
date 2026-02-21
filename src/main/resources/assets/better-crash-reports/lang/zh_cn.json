@@ -7,7 +7,10 @@
   "crash.better-crash-reports.other_infos": "其它可能用于调试的信息: ",
   "crash.better-crash-reports.at": "在 ",
   "crash.better-crash-reports.thread": "线程: ",
-  "crash.better-crash-reports.adv_a": "更好的崩溃日志模组认为模组%s可能有点问题，您可以尝试卸载这个模组然后再试。 ",
+  "crash.better-crash-reports.adv_a.1": "更好的崩溃日志模组认为模组%s可能有点问题，您可以尝试卸载这个模组然后再试。 ",
+  "crash.better-crash-reports.adv_a.2": "模组%s是不是有什么问题？你可以尝试更新它或者卸载之后重试",
+  "crash.better-crash-reports.adv_a.3": "模组%s可能有些问题，至少我觉得是这样的。",
+  "crash.better-crash-reports.adv_a.4": "模组%s可能是崩溃的源头。你可能需要更新它或者卸载它。",
   "crash.better-crash-reports.adv_b": "你把自己游戏搞崩了。你为啥要那么做？",
   "crash.better-crash-reports.adv": "来自更好的崩溃日志模组的建议: ",
   "crash.better-crash-reports.unknown": "更好的崩溃日志模组不知道问题出在哪里，也许是Minecraft本身的问题。",
@@ -48,7 +51,9 @@
   "crash.better-crash-report.comment.28": "别干那个。",
   "crash.better-crash-report.comment.29": "哦，那怪疼的",
   "crash.better-crash-report.comment.30": "你怎么这么自私！",
-  "crash.better-crash-report.comment.31": "这是一个免费的拥抱代码。可在您最近的Mojangsta处兑换：[~~HUG~~]",
+  "crash.better-crash-report.comment.31": "这是一个免费的拥抱代码。可在您最近的Mojang黑奴处兑换：[~~HUG~~]",
   "crash.better-crash-report.comment.32": "那有四盏灯！",
-  "crash.better-crash-report.comment.33": "但我这就行啊...？"
+  "crash.better-crash-report.comment.33": "但我这就行啊...？",
+  "java.lang.NullPointerException": "空指针异常",
+  "java.lang.RuntimeException": "运行时异常"
 }
