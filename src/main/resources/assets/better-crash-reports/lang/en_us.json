@@ -55,5 +55,6 @@
   "crash.better-crash-report.comment.32": "There are four lights!",
   "crash.better-crash-report.comment.33": "But it works on my machine.",
   "java.lang.NullPointerException": "Null Pointer Exception",
-  "java.lang.RuntimeException": "Runtime Exception"
+  "java.lang.RuntimeException": "Runtime Exception",
+  "crash.better-crash-reports.multiple_mods": "Better Crash Reports thinks there might will be a problem with the following mods:"
 }

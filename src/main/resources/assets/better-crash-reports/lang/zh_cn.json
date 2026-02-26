@@ -55,5 +55,6 @@
   "crash.better-crash-report.comment.32": "那有四盏灯！",
   "crash.better-crash-report.comment.33": "但我这就行啊...？",
   "java.lang.NullPointerException": "空指针异常",
-  "java.lang.RuntimeException": "运行时异常"
+  "java.lang.RuntimeException": "运行时异常",
+  "crash.better-crash-reports.multiple_mods": "更好的崩溃日志模组认为下列的模组可能是问题的来源："
 }
