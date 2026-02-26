@@ -3,12 +3,7 @@ package com.mod.driver166.mixin;
 import com.google.common.collect.Lists;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-<<<<<<< Updated upstream
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.api.metadata.Person;
-=======
 import net.fabricmc.loader.api.metadata.*;
->>>>>>> Stashed changes
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import net.minecraft.util.crash.CrashReport;
@@ -24,21 +19,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
     @Shadow
     public abstract String getMessage();
     @Shadow
-    public abstract String getCauseAsString();
-    @Shadow
     private final List<CrashReportSection> otherSections = Lists.newArrayList();
     @Shadow
     private StackTraceElement[] stackTrace = new StackTraceElement[0];
+    @Shadow
+    public abstract String getCauseAsString();
 
     @Shadow
     public abstract CrashReportSection getSystemDetailsSection();
@@ -93,8 +85,10 @@ public abstract class CrashReportMixin {
     @Unique
     public List<String> get_mod_list(){
         List<String> mod_list = new ArrayList<>();
-        for (ModContainer mod:FabricLoader.getInstance().getAllMods()){
-            mod_list.add(mod.toString().split(" ")[0]);
+        for (ModContainer mod : FabricLoader.getInstance().getAllMods()){
+            // 获取真实的模组ID，而不是从toString解析
+            String modId = mod.getMetadata().getId();
+            mod_list.add(modId);
         }
         return mod_list;
     }
@@ -113,10 +107,33 @@ public abstract class CrashReportMixin {
         return modId;
     }
     @Unique
+    private void genAdvA(StringBuilder stringBuilder, String mod_id){
+        String[] advises = new String[]{
+                "crash.better-crash-reports.adv_a.1",
+                "crash.better-crash-reports.adv_a.2",
+                "crash.better-crash-reports.adv_a.3",
+                "crash.better-crash-reports.adv_a.4",
+                "crash.better-crash-reports.adv_a.5"
+        };
+        ModMetadata metadata = getModMetadata(mod_id);
+        Random random = new Random();
+        stringBuilder.append(new TranslatableText(advises[random.nextInt(5)], getModName(mod_id)).getString());
+        if (metadata != null) {
+            stringBuilder.append("\n");
+            stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
+        }
+    }
+    @Unique
     private static @Nullable ModMetadata getModMetadata(String modId) {
         Optional<ModContainer> optionalContainer = FabricLoader.getInstance().getModContainer(modId);
         return optionalContainer.map(ModContainer::getMetadata).orElse(null);
     }
+
     @Unique
     private static String getAuthorInString(ModMetadata metadata) {
         StringBuilder sb = new StringBuilder();
@@ -126,72 +143,132 @@ public abstract class CrashReportMixin {
         return sb.toString();
     }
     @Unique
-<<<<<<< Updated upstream
-    private void generate_advertise(StringBuilder stringBuilder){
-=======
     private void generate_advise(StringBuilder stringBuilder){
->>>>>>> Stashed changes
         stringBuilder.append("\n").append(new TranslatableText("crash.better-crash-reports.adv").getString()).append("\n");
         String[] lines = getCauseAsString().split("\n");
         try {
             if (lines[0].contains("provided by")) {
                 if (mods_contains_modid(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])) {
                     String mod_id = lines[0].split("provided by")[1].split(" at")[0].split("'")[1];
-                    ModMetadata metadata = getModMetadata(mod_id);
-<<<<<<< Updated upstream
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_a", getModName(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])).getString());
-                    stringBuilder.append("\n");
-                    stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
-                }
-            } else if (lines[0].contains("Manually triggered debug crash") || lines[1].contains("pollDebugCrash")) {
-=======
-                    stringBuilder.append(new TranslatableText(advises[(int)(Util.getMeasuringTimeNano() % (long)advises.length)], getModName(lines[0].split("provided by")[1].split(" at")[0].split("'")[1])).getString());
-                    stringBuilder.append("\n");
-                    if (metadata != null) {
-                        stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
-                    }
+                    genAdvA(stringBuilder, mod_id);
+                } else {
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.unknown").getString());
                 }
             } else if (lines[0].contains("Manually triggered debug crash")) {
->>>>>>> Stashed changes
                 stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_b").getString());
-            } else if (mods_contains_modid(lines[1].split("\\$")[lines[1].split("\\$").length - 2])) {
-                String mod_id = lines[1].split("\\$")[lines[1].split("\\$").length - 2];
-                ModMetadata metadata = getModMetadata(mod_id);
-<<<<<<< Updated upstream
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.adv_a", getModName(lines[1].split("\\$")[lines[1].split("\\$").length - 2])).getString());
-                stringBuilder.append("\n");stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
-=======
-                Random random = new Random();
-                stringBuilder.append(new TranslatableText(advises[random.nextInt(5)], getModName(mod_id)).getString());
-                if (metadata != null) {
-                    stringBuilder.append("\n");
-                    stringBuilder.append("--- ").append(new TranslatableText("crash.better-crash-reports.mod_info").getString()).append(" ---\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.name").getString()).append(getModName(mod_id)).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.mod_id").getString()).append(metadata.getId()).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.version").getString()).append(metadata.getVersion()).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.author").getString()).append(getAuthorInString(metadata)).append("\n");
-                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.mod_info.description").getString()).append(metadata.getDescription());
-                }
->>>>>>> Stashed changes
             } else {
-                stringBuilder.append(new TranslatableText("crash.better-crash-reports.unknown").getString());
+                Set<String> possibleMods = new HashSet<>();
+
+                // 方法1：原来的 $ 符号方法
+                for (String line : lines) {
+                    String mod_id = "";
+                    try{
+                        mod_id = line.split("\\$")[line.split("\\$").length - 2];
+                    } catch (IndexOutOfBoundsException ignored) {}
+
+                    if (!mod_id.isEmpty() && mods_contains_modid(mod_id)) {
+                        possibleMods.add(mod_id);
+                    }
+                }
+
+                // 方法2：直接从类名匹配模组ID
+                if (possibleMods.isEmpty()) {
+                    for (String line : lines) {
+                        if (!line.startsWith("\tat ")) continue;
+
+                        // 提取类名
+                        String classPart = line.substring(line.lastIndexOf("at ") + 3);
+                        if (classPart.contains("//")) {
+                            classPart = classPart.substring(classPart.indexOf("//") + 2);
+                        }
+                        int parenIndex = classPart.indexOf('(');
+                        if (parenIndex > 0) {
+                            String fullClassName = classPart.substring(0, parenIndex);
+                            int lastDot = fullClassName.lastIndexOf('.');
+                            if (lastDot > 0) {
+                                String className = fullClassName.substring(0, lastDot);
+
+                                // 检查所有模组ID
+                                for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+                                    String modId = mod.getMetadata().getId();
+                                    if (!className.startsWith("net.minecraft") &&
+                                            !className.startsWith("com.mojang") &&
+                                            !className.startsWith("net.fabricmc") &&
+                                            !className.startsWith("java.") &&  // 过滤Java类
+                                            !className.startsWith("javax.") && // 过滤Java类
+                                            !className.startsWith("org.lwjgl") &&
+                                            className.contains(modId)) {
+                                        possibleMods.add(modId);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 方法3：基于包名的启发式匹配（简化版）
+                if (possibleMods.isEmpty()) {
+                    for (String line : lines) {
+                        if (!line.startsWith("\tat ")) continue;
+
+                        String classPart = line.substring(line.lastIndexOf("at ") + 3);
+                        if (classPart.contains("//")) {
+                            classPart = classPart.substring(classPart.indexOf("//") + 2);
+                        }
+                        int parenIndex = classPart.indexOf('(');
+                        if (parenIndex > 0) {
+                            String fullClassName = classPart.substring(0, parenIndex);
+                            int lastDot = fullClassName.lastIndexOf('.');
+                            if (lastDot > 0) {
+                                String className = fullClassName.substring(0, lastDot);
+                                String[] parts = className.split("\\.");
+
+                                // 跳过常见的顶级域名
+                                int startIdx = 0;
+                                if (parts.length > 2 && parts[0].matches("^(com|net|org|io|me)$")) {
+                                    startIdx = 1;
+                                }
+
+                                // 尝试每个包名部分
+                                for (int i = startIdx; i < parts.length; i++) {
+                                    String candidate = parts[i];
+                                    // 跳过常见的内部包名
+                                    if (candidate.matches("^(api|client|common|core|impl|internal|server|util|mixin)$")) {
+                                        continue;
+                                    }
+                                    if (mods_contains_modid(candidate)) {
+                                        possibleMods.add(candidate);
+                                        break;
+                                    }
+                                    // 尝试带连字符的版本
+                                    String withHyphen = candidate.replace('.', '-');
+                                    if (mods_contains_modid(withHyphen)) {
+                                        possibleMods.add(withHyphen);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 输出结果
+                if (!possibleMods.isEmpty()) {
+                    if (possibleMods.size() == 1) {
+                        genAdvA(stringBuilder, possibleMods.iterator().next());
+                    } else {
+                        stringBuilder.append(new TranslatableText("crash.better-crash-reports.multiple_mods").getString()).append("\n");
+                        for (String modId : possibleMods) {
+                            stringBuilder.append("  - ").append(getModName(modId)).append(" (").append(modId).append(")\n");
+                        }
+                    }
+                } else {
+                    stringBuilder.append(new TranslatableText("crash.better-crash-reports.unknown").getString());
+                }
             }
-        } catch (IndexOutOfBoundsException ignored){
+        } catch (Exception e) {
+            // 确保不会在崩溃报告中再次崩溃
+            stringBuilder.append(new TranslatableText("crash.better-crash-reports.unknown").getString());
         }
     }
 
@@ -211,16 +288,12 @@ public abstract class CrashReportMixin {
         sb.append(new TranslatableText("crash.better-crash-reports.thread").getString()).append(Thread.currentThread().getName()).append("\n");
         sb.append(new TranslatableText("crash.better-crash-reports.stacktrace").getString());
         sb.append("\n");
-<<<<<<< Updated upstream
-        sb.append(getCauseAsString());
-=======
         sb.append(getModifiedCauseAsString());
->>>>>>> Stashed changes
         sb.append("\n\n").append(new TranslatableText("crash.better-crash-reports.mod_used").getString()).append("\n");
         for (ModContainer mod:FabricLoader.getInstance().getAllMods()){
             sb.append("\t- ").append(mod.toString()).append("\n");
         }
-        generate_advertise(sb);
+        generate_advise(sb);
         sb.append("\n\n");
         sb.append(new TranslatableText("crash.better-crash-reports.other_infos").getString());
         sb.append("\n");
@@ -238,10 +311,9 @@ public abstract class CrashReportMixin {
         }
 
         this.getSystemDetailsSection().addStackTrace(sb);
+
         cir.setReturnValue(sb.toString());
     }
-<<<<<<< Updated upstream
-=======
     @Unique
     private String joinListWithSeparator(List<String> list, @Nullable String separator){
         StringBuilder stringBuilder = new StringBuilder();
@@ -274,7 +346,6 @@ public abstract class CrashReportMixin {
         return cause;
     }
 
->>>>>>> Stashed changes
 
     static {
         DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.ROOT);

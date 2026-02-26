@@ -1,9 +1,9 @@
 package com.mod.driver166;
 
 import net.fabricmc.api.ModInitializer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 public class BetterCrashReports implements ModInitializer {
 	public static final String MOD_ID = "better-crash-reports";
